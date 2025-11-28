@@ -1,0 +1,38 @@
+<!-- ============================================ -->
+<!-- FILE: templates/partials/stats_cards.html -->
+<!-- Letakkan file ini di: templates/partials/stats_cards.html -->
+<!-- ============================================ -->
+
+<!-- Total Projects -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+  <div class="flex items-center gap-2 mb-2">
+    <i data-lucide="folder" class="w-5 h-5 text-Primary-500"></i>
+    <h3 class="text-Primary-500 font-semibold">Projects</h3>
+  </div>
+  <p class="text-3xl font-bold text-gray-800">{{ stats.total }}</p>
+  <p class="text-sm text-gray-500">Total Projects</p>
+</div>
+
+<!-- Completed -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+  <div class="flex items-center gap-2 mb-2">
+    <i data-lucide="check-circle-2" class="w-5 h-5 text-green-500"></i>
+    <h3 class="text-green-600 font-semibold">Completed</h3>
+  </div>
+  <p class="text-3xl font-bold text-gray-800">{{ stats.completed }}</p>
+  <p class="text-sm text-gray-500">Finished Tasks</p>
+</div>
+
+<!-- Errors -->
+<div class="bg-white rounded-xl p-5 shadow-sm border border-gray-200">
+  <div class="flex items-center gap-2 mb-2">
+    <i data-lucide="alert-triangle" class="w-5 h-5 text-red-500"></i>
+    <h3 class="text-red-600 font-semibold">Errors</h3>
+  </div>
+  <p class="text-3xl font-bold text-gray-800">{{ stats.errors }}</p>
+  <p class="text-sm text-gray-500">Issues Found</p>
+</div>
+
+<script>lucide.createIcons();</script>
+
+

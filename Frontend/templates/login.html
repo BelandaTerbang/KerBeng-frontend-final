@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - AutoPentest</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: radial-gradient(circle at top, #0a0a2a, #010112);
+        }
+    </style>
+</head>
+
+<body class="flex items-center justify-center min-h-screen text-gray-900">
+
+    <div
+        class="w-full max-w-sm bg-white/10 backdrop-blur-md border border-white/10 rounded-2xl shadow-xl p-8 text-center text-white">
+
+        <div class="flex justify-center mb-4">
+            <div class="w-20 h-20 flex items-center justify-center rounded-full border-2 border-white/20 bg-white/10">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-10 h-10 text-white/80" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M5.121 17.804A9 9 0 1118.88 17.8M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+            </div>
+        </div>
+
+        <h2 class="text-2xl font-bold mb-1">Hello!</h2>
+        <h2 class="text-2xl font-bold mb-1">Welcome</h2>
+        <p class="text-sm text-gray-300 mb-6">Please login to continue</p>
+
+        {% if error %}
+        <div class="text-red-400 text-sm mb-4">{{ error }}</div>
+        {% endif %}
+
+        <form action="{{ url_for('login') }}" method="POST" class="space-y-4">
+            <div class="text-left">
+                <input id="username" name="username" type="text" placeholder="Username"
+                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            </div>
+
+            <div class="text-left">
+                <input id="password" name="password" type="password" placeholder="Password"
+                    class="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 placeholder-gray-400 text-white focus:ring-2 focus:ring-blue-500 focus:outline-none" />
+            </div>
+
+            <button type="submit"
+                class="w-full py-3 mt-2 bg-blue-600 hover:bg-blue-700 rounded-lg font-medium transition-all duration-200">
+                Login
+            </button>
+        </form>
+    </div>
+
+</body>
+</html>

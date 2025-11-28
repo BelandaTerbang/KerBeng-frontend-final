@@ -1,0 +1,24 @@
+<div class="w-full px-7 py-5 border-b border-Neutral-900/10 flex justify-between items-center bg-white">
+  <!-- Breadcrumb dinamis -->
+  <div class="flex items-center gap-2 text-base font-inter">
+    {% if breadcrumb %}
+    <nav class="flex items-center text-sm text-gray-500 mb-4 space-x-1">
+      {% for name, link in breadcrumb %}
+      {% if link %}
+      <a href="{{ link }}" class="hover:text-Primary-500 transition">{{ name }}</a>
+      {% if not loop.last %}
+      <span class="text-gray-400">›</span>
+      {% endif %}
+      {% else %}
+      <span class="text-Primary-500 font-semibold">{{ name }}</span>
+      {% endif %}
+      {% endfor %}
+    </nav>
+    {% endif %}
+
+  </div>
+</div>
+
+<script>
+  lucide.createIcons();
+</script>

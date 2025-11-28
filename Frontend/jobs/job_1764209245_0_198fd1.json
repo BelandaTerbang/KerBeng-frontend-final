@@ -1,0 +1,17 @@
+{
+  "job_id": "job_1764209245_0_198fd1",
+  "project_name": "hi1",
+  "username": "admin",
+  "description": "",
+  "target_ip": "10.33.102.252",
+  "cve_module": "CVE12_2122",
+  "status": "failed",
+  "created_at": "2025-11-27 09:07:25",
+  "progress": 15,
+  "pid": null,
+  "queue_position": 1,
+  "started_at": "2025-11-27 09:07:25",
+  "finished_at": "2025-11-27 09:07:57",
+  "error": "Process exited with code 1",
+  "return_code": 1
+}

@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% set active_page = 'reports' %}
+
+{% block title %}Reports - AutoPentest{% endblock %}
+
+{% block content %}
+<div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
+  <div class="flex justify-between items-center mb-6">
+    <div class="flex items-center gap-3">
+      <i data-lucide="file-text" class="w-7 h-7 text-Primary-500"></i>
+      <h2 class="text-2xl font-bold text-Primary-500">Reports Project</h2>
+    </div>
+
+    <!-- <button class="flex items-center gap-2 bg-Primary-500 text-white px-4 py-2 rounded-lg hover:bg-Primary-200 transition">
+      <i data-lucide="download" class="w-5 h-5"></i> Export All
+    </button> -->
+  </div>
+
+  <!-- Search bar -->
+  <div class="flex justify-end mb-4">
+    <div class="relative">
+      <i data-lucide="search" class="w-4 h-4 text-gray-400 absolute left-3 top-2.5"></i>
+      <input
+        type="text"
+        placeholder="Search reports..."
+        name="search"
+        hx-get="{{ url_for('htmx_reports_table') }}"
+        hx-trigger="keyup changed delay:300ms"
+        hx-target="#reports-table"
+        hx-include="[name='search']"
+        hx-push-url="false"
+        class="pl-9 pr-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-Primary-200 w-60"
+      />
+    </div>
+  </div>
+
+  <!-- HTMX Table Container -->
+  <div
+    id="reports-table"
+    hx-get="{{ url_for('htmx_reports_table') }}"
+    hx-trigger="load"
+    hx-swap="morphdom:outerHTML"
+    class="transition-opacity duration-300 ease-in-out"
+  >
+    <!-- Placeholder -->
+    <div class="space-y-3 animate-pulse">
+      <div class="h-10 bg-gray-200 rounded"></div>
+      <div class="h-10 bg-gray-100 rounded"></div>
+      <div class="h-10 bg-gray-100 rounded"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Global Alert Container (untuk success/error popup) -->
+<div id="alert-container" class="fixed top-6 right-6 z-[9999] space-y-2"></div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", () => lucide.createIcons());
+
+  // Refresh ikon setelah HTMX swap
+  document.body.addEventListener("htmx:afterSwap", () => lucide.createIcons());
+
+  // Auto-refresh table setiap 10 detik
+  document.addEventListener("DOMContentLoaded", () => {
+    const reportsTable = document.getElementById("reports-table");
+    setInterval(() => {
+      if (reportsTable) {
+        htmx.ajax("GET", "{{ url_for('htmx_reports_table') }}", { target: "#reports-table" });
+      }
+    }, 10000);
+  });
+</script>
+{% endblock %}

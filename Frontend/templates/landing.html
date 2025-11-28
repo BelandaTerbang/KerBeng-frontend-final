@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoPentest - Otomatisasi Penetration Testing</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1a202c;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Header */
+        header {
+            background: white;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1a202c;
+            text-decoration: none;
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #4a5568;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: #3b82f6;
+        }
+
+        .btn-login {
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 24px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: background-color 0.3s;
+        }
+
+        .btn-login:hover {
+            background-color: #2563eb;
+        }
+
+        /* Hero Section */
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+            padding: 80px 0 100px 0;
+            min-height: calc(100vh - 80px);
+        }
+
+        .hero-text {
+            flex: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 52px;
+            font-weight: 700;
+            margin: 0 0 24px 0;
+            line-height: 1.2;
+            color: #1a202c;
+        }
+
+        .hero-text p {
+            font-size: 18px;
+            color: #4a5568;
+            margin-bottom: 32px;
+            line-height: 1.7;
+        }
+
+        .btn-cta {
+            background-color: #1e293b;
+            color: white;
+            padding: 16px 32px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-block;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .btn-cta:hover {
+            background-color: #334155;
+            transform: translateY(-2px);
+        }
+
+        .hero-img {
+            flex: 1;
+            position: relative;
+        }
+
+        .mockup-card {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+            position: relative;
+        }
+
+        .mockup-card::before {
+            display: none;
+        }
+
+        .mockup-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .mockup-header {
+            display: flex;
+            gap: 6px;
+            margin-bottom: 20px;
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #cbd5e1;
+        }
+
+        .dashboard-content {
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            padding: 20px 0;
+        }
+
+        .chart-bar {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .bar {
+            height: 8px;
+            background: #e2e8f0;
+            border-radius: 4px;
+        }
+
+        .bar.active {
+            background: #3b82f6;
+        }
+
+        .chart-pie {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: conic-gradient(#3b82f6 0% 60%, #60a5fa 60% 85%, #93c5fd 85% 100%);
+        }
+
+        .chart-lines {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .line {
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+        }
+
+        .line:nth-child(1) {
+            width: 80%;
+        }
+
+        .line:nth-child(2) {
+            width: 60%;
+        }
+
+        .line:nth-child(3) {
+            width: 90%;
+        }
+
+        .line:nth-child(4) {
+            width: 70%;
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: #f8fafc;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #1a202c;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 40px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            background: #3b82f6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 20px;
+            margin-bottom: 12px;
+            color: #1a202c;
+        }
+
+        .feature-card p {
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            padding: 80px 0;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 60px;
+            color: #1a202c;
+        }
+
+        .steps {
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+            flex-wrap: wrap;
+        }
+
+        .step {
+            text-align: center;
+            flex: 1;
+            min-width: 200px;
+        }
+
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: #3b82f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 32px;
+            margin: 0 auto 20px;
+        }
+
+        .step h3 {
+            font-size: 18px;
+            margin-bottom: 12px;
+            color: #1a202c;
+        }
+
+        .step p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .cta-section {
+            text-align: center;
+            padding: 60px 0;
+        }
+
+        .btn-secondary {
+            background-color: #3b82f6;
+            color: white;
+            padding: 16px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            display: inline-block;
+            transition: background-color 0.3s;
+        }
+
+        .btn-secondary:hover {
+            background-color: #2563eb;
+        }
+
+        /* About Section */
+        .about-section {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .about-content {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+
+        .about-text {
+            flex: 1;
+            /* center text to match How It Works */
+            text-align: center;
+        }
+
+        .about-text h2 {
+            font-size: 36px;
+            /* same size as How It Works */
+            margin-bottom: 24px;
+            color: #1a202c;
+            text-align: center;
+            /* place in the center */
+        }
+
+        .about-text p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #4a5568;
+            margin-bottom: 16px;
+        }
+
+        .about-visual {
+            flex: 1;
+            position: relative;
+        }
+
+        .security-shield {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .shield-container {
+            background: linear-gradient(135deg, #3b82f6 0%, #1e40af 100%);
+            border-radius: 50%;
+            width: 280px;
+            height: 280px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+            position: relative;
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 20px 60px rgba(59, 130, 246, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 20px 80px rgba(59, 130, 246, 0.5);
+            }
+        }
+
+        .shield-icon {
+            font-size: 120px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+        }
+
+        .floating-element {
+            position: absolute;
+            background: white;
+            border-radius: 12px;
+            padding: 12px 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .floating-element.top-left {
+            top: 0;
+            left: 0;
+            animation-delay: 0s;
+        }
+
+        .floating-element.top-right {
+            top: 20px;
+            right: 0;
+            animation-delay: 0.5s;
+        }
+
+        .floating-element.bottom-left {
+            bottom: 20px;
+            left: 20px;
+            animation-delay: 1s;
+        }
+
+        .floating-element.bottom-right {
+            bottom: 0;
+            right: 20px;
+            animation-delay: 1.5s;
+        }
+
+        .floating-element .icon {
+            font-size: 24px;
+        }
+
+        .floating-element .text {
+            font-size: 12px;
+            font-weight: 600;
+            color: #1a202c;
+        }
+
+        .about-highlight {
+            background: #f0f9ff;
+            border-left: 4px solid #3b82f6;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 24px;
+        }
+
+        .about-highlight p {
+            margin: 0;
+            font-style: italic;
+            color: #1e40af;
+        }
+
+        html {
+            scroll-padding-top: 100px;
+            /* Tambahkan jarak agar tidak menempel ke header */
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding: 40px 0 60px 0;
+            }
+
+            .hero-text h1 {
+                font-size: 36px;
+            }
+
+            nav {
+                display: none;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .steps {
+                flex-direction: column;
+            }
+
+            .about-content {
+                flex-direction: column;
+            }
+        }
+
+        /* --- RESPONSIVE FIXES UNTUK SEMUA UKURAN LAYAR --- */
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        .hero,
+        .about-content {
+            flex-wrap: wrap;
+        }
+
+        /* Pastikan gambar dan elemen visual tidak terpotong */
+        .hero-img,
+        .about-visual,
+        .security-shield,
+        .shield-container {
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            text-align: center;
+        }
+
+        /* Agar teks dan elemen tidak keluar layar kecil */
+        .hero-text h1 {
+            word-wrap: break-word;
+        }
+
+        /* Elemen hero dan teks di layar kecil */
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+                padding: 40px 20px;
+            }
+
+            .hero-text h1 {
+                font-size: 32px;
+                line-height: 1.3;
+            }
+
+            .hero-text p {
+                font-size: 16px;
+            }
+
+            .mockup-card {
+                width: 100%;
+                padding: 16px;
+            }
+
+            .about-content {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .about-text h2 {
+                font-size: 28px;
+            }
+
+            .features h2,
+            .how-it-works h2 {
+                font-size: 28px;
+            }
+
+            .steps {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+
+        /* Tambahan untuk layar sangat kecil (HP di bawah 480px) */
+        @media (max-width: 480px) {
+            .hero-text h1 {
+                font-size: 26px;
+            }
+
+            .hero-text p {
+                font-size: 14px;
+            }
+
+            .btn-cta,
+            .btn-secondary {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .feature-card {
+                padding: 24px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <a href="#" class="logo">AutoPentest</a>
+                <nav>
+                    <a href="#beranda">Beranda</a>
+                    <a href="#tentang">Tentang</a>
+                    <a href="#manfaat">Manfaat</a>
+                    <a href="#fitur">Fitur</a>
+                </nav>
+                <a href="{{ url_for('login') }}" class="btn-login">Masuk</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <main>
+        <section class="hero container" id="beranda">
+            <div class="hero-text">
+                <h1>Test Otomatisasi Penetration Testing dalam Satu Platform</h1>
+                <p>Mulai proyek pentesting Anda dengan AutoPentest untuk efisiensi dan hasil yang akurat. Kelola
+                    project, dokumentasi, dan laporan CVE dengan mudah melalui dashboard terpusat.</p>
+                <a href="{{ url_for('login') }}" class="btn-cta">Mulai Proyek Pentesting Anda</a>
+            </div>
+            <div class="hero-img">
+                <div class="mockup-card">
+                    <div class="mockup-content">
+                        <div class="mockup-header">
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                        <div class="dashboard-content">
+                            <div class="chart-bar">
+                                <div class="bar active" style="width: 40%; height: 60px;"></div>
+                                <div class="bar active" style="width: 60%; height: 80px;"></div>
+                                <div class="bar active" style="width: 80%; height: 100px;"></div>
+                                <div class="bar active" style="width: 50%; height: 70px;"></div>
+                            </div>
+                            <div class="chart-pie"></div>
+                            <div class="chart-lines">
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                                <div class="line"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about-section" id="tentang">
+            <div class="container">
+                <div class="about-content">
+                    <div class="about-text">
+                        <h2>Tentang</h2>
+                        <p>
+                            Autopentest adalah cara otomatis untuk menguji keamanan sistem secara cepat dan hemat waktu,
+                            tanpa perlu terus-menerus melakukan pemeriksaan manual. Dengan Autopentest, Anda bisa
+                            menemukan celah keamanan secara berkala, menghemat biaya dan waktu, serta memastikan sistem
+                            tetap aman dari serangan terbaru.
+                        </p>
+                        <div class="about-highlight">
+                            <p>
+                                💡 Ini seperti punya "penjaga keamanan digital" yang bekerja sepanjang hari, siap
+                                mendeteksi masalah sebelum jadi permasalahan besar.
+                            </p>
+                        </div>
+                    </div>
+                    <div class="about-visual">
+                        <div class="security-shield">
+                            <div class="shield-container">
+                                <div class="shield-icon">🛡️</div>
+                            </div>
+                            <div class="floating-element top-left">
+                                <span class="icon">🔒</span>
+                                <span class="text">Secure</span>
+                            </div>
+                            <div class="floating-element top-right">
+                                <span class="icon">⚡</span>
+                                <span class="text">Fast</span>
+                            </div>
+                            <div class="floating-element bottom-left">
+                                <span class="icon">💰</span>
+                                <span class="text">Save Cost</span>
+                            </div>
+                            <div class="floating-element bottom-right">
+                                <span class="icon">🤖</span>
+                                <span class="text">Automated</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features" id="fitur">
+            <div class="container">
+                <h2>Fitur Unggulan</h2>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">🚀</div>
+                        <h3>Auto Pentest</h3>
+                        <p>Jalankan pentesting otomatis terhadap target IP/Subnet dengan mudah dan cepat.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">📊</div>
+                        <h3>Dashboard & Reporting</h3>
+                        <p>Semua hasil tercatat, dapat diunduh dalam laporan yang komprehensif.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon">🛡️</div>
+                        <h3>Error & CVE Tracking</h3>
+                        <p>Dokumentasikan error dan eksploitasi CVE terstruktur.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works" id="manfaat">
+            <div class="container">
+                <h2>How It Works</h2>
+                <div class="steps">
+                    <div class="step">
+                        <div class="step-icon">➕</div>
+                        <h3>Buat project</h3>
+                        <p>& masukkan target IP</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">⚙️</div>
+                        <h3>Jalankan pentesting</h3>
+                        <p>otomatis</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-icon">📄</div>
+                        <h3>Analisis hasil</h3>
+                        <p>& unduh laporan</p>
+                    </div>
+                </div>
+                <div class="cta-section">
+                    <a href="{{ url_for('login') }}" class="btn-secondary">Coba Sekarang</a>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+
+</html>

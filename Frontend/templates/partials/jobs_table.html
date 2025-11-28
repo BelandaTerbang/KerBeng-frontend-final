@@ -1,0 +1,286 @@
+<div x-data="projectsTable()" x-init="lucide.createIcons()" data-jobs='{{ jobs | tojson | safe }}'>
+  {% if jobs %}
+  <div class="overflow-x-auto rounded-lg border border-gray-100">
+    <table class="min-w-full table-fixed divide-y divide-gray-200 text-sm">
+      <thead class="bg-Primary-100 text-Primary-500 uppercase text-xs font-semibold">
+        <tr>
+          <th class="w-2/5 px-4 py-3 text-left cursor-pointer select-none" hx-get="{{ url_for('htmx_jobs_table') }}"
+            hx-include="[name='search']" hx-target="#projects-table" hx-swap="morphdom:outerHTML" hx-vals='{
+              "sort_by": "project_name",
+              "order": "{{ "asc" if sort_by != "project_name" or order == "desc" else "desc" }}",
+              "search": "{{ request.args.get("search", "") }}"
+            }' onclick="
+              const table = document.getElementById('projects-table');
+              table.dataset.sortBy = 'project_name';
+              table.dataset.order = '{{ 'asc' if sort_by != 'project_name' or order == 'desc' else 'desc' }}';
+            ">
+            Project Name
+            {% if sort_by == "project_name" %}
+            {% if order == "asc" %}
+            <i data-lucide="arrow-up" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% else %}
+            <i data-lucide="arrow-down" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% endif %}
+            {% else %}
+            <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-60"></i>
+            {% endif %}
+          </th>
+
+          <th class="w-2/5 px-4 py-3 text-left cursor-pointer select-none" hx-get="{{ url_for('htmx_jobs_table') }}"
+            hx-target="#projects-table" hx-swap="morphdom:outerHTML" hx-vals='{
+              "sort_by": "cve_module",
+              "order": "{{ "asc" if sort_by != "cve_module" or order == "desc" else "desc" }}",
+              "search": "{{ request.args.get("search", "") }}"
+            }' onclick="
+              const table = document.getElementById('projects-table');
+              table.dataset.sortBy = 'cve_module';
+              table.dataset.order = '{{ 'asc' if sort_by != 'cve_module' or order == 'desc' else 'desc' }}';
+            ">
+            CVE Module
+            {% if sort_by == "cve_module" %}
+            {% if order == "asc" %}
+            <i data-lucide="arrow-up" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% else %}
+            <i data-lucide="arrow-down" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% endif %}
+            {% else %}
+            <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-60"></i>
+            {% endif %}
+          </th>
+
+          </th>
+          <th class="w-2/5 px-4 py-3 text-left cursor-pointer select-none" hx-get="{{ url_for('htmx_jobs_table') }}"
+            hx-target="#projects-table" hx-swap="morphdom:outerHTML" hx-vals='{
+              "sort_by": "status",
+              "order": "{{ "asc" if sort_by != "status" or order == "desc" else "desc" }}",
+              "search": "{{ request.args.get("search", "") }}"
+            }' onclick="
+              const table = document.getElementById('projects-table');
+              table.dataset.sortBy = 'status';
+              table.dataset.order = '{{ 'asc' if sort_by != 'status' or order == 'desc' else 'desc' }}';
+            ">
+            Status
+            {% if sort_by == "status" %}
+            {% if order == "asc" %}
+            <i data-lucide="arrow-up" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% else %}
+            <i data-lucide="arrow-down" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% endif %}
+            {% else %}
+            <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-60"></i>
+            {% endif %}
+          </th>
+
+          </th>
+          <th class="w-2/5 px-4 py-3 text-left cursor-pointer select-none" hx-get="{{ url_for('htmx_jobs_table') }}"
+            hx-target="#projects-table" hx-swap="morphdom:outerHTML" hx-vals='{
+              "sort_by": "created_at",
+              "order": "{{ "asc" if sort_by != "created_at" or order == "desc" else "desc" }}",
+              "search": "{{ request.args.get("search", "") }}"
+            }' onclick="
+              const table = document.getElementById('projects-table');
+              table.dataset.sortBy = 'created_at';
+              table.dataset.order = '{{ 'asc' if sort_by != 'created_at' or order == 'desc' else 'desc' }}';
+            ">
+            Last Run
+            {% if sort_by == "created_at" %}
+            {% if order == "asc" %}
+            <i data-lucide="arrow-up" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% else %}
+            <i data-lucide="arrow-down" class="inline w-3 h-3 ml-1 text-Primary-500"></i>
+            {% endif %}
+            {% else %}
+            <i data-lucide="arrow-up-down" class="inline w-3 h-3 ml-1 opacity-60"></i>
+            {% endif %}
+          </th>
+
+          <th class="px-4 py-3 text-left">Action</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-100 align-top">
+        {% for job in jobs %}
+        <tr class="hover:bg-Primary-100/30 transition-colors">
+          <!-- Project name, username, target IP -->
+          <td class="px-4 py-3 align-middle">
+            <div class="font-medium text-gray-900">{{ job.project_name }}</div>
+            <div class="text-xs text-gray-500 mt-1">
+              <span class="inline-flex items-center gap-1">
+                <i data-lucide="user" class="w-3 h-3"></i>
+                {{ job.username }}
+              </span>
+              <span class="mx-1">•</span>
+              <span class="inline-flex items-center gap-1">
+                <i data-lucide="server" class="w-3 h-3"></i>
+                {{ job.target_ip }}
+              </span>
+            </div>
+          </td>
+
+          <!-- CVE Module -->
+          <td class="px-4 py-3 text-gray-700">{{ job.cve_module }}</td>
+
+          <!-- Status Badge -->
+          <td class="px-4 py-3">
+            {% if job.status == 'running' %}
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-yellow-100 text-yellow-700">
+              <i data-lucide="loader-2" class="w-4 h-4 animate-spin"></i>
+              Running
+            </span>
+
+            {% elif job.status == 'completed' %}
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-green-100 text-green-700">
+              <i data-lucide="check-circle" class="w-4 h-4"></i>
+              Completed
+            </span>
+
+            {% elif job.status == 'failed' %}
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-red-100 text-red-700">
+              <i data-lucide="x-circle" class="w-4 h-4"></i>
+              Failed
+            </span>
+
+            {% elif job.status == 'cancelled' %}
+            <span
+              class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-100 text-gray-700">
+              <i data-lucide="x" class="w-4 h-4"></i>
+              Cancelled
+            </span>
+            {% else %}
+            <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-medium bg-gray-50 text-gray-400">
+              Unknown
+            </span>
+            {% endif %}
+          </td>
+
+          <!-- Date (from Flask version, keep original format) -->
+          <td class="px-4 py-3 whitespace-nowrap text-gray-600 align-middle">
+            <span class="inline-flex items-center gap-2">
+              <i data-lucide="calendar" class="w-4 h-4 text-gray-400"></i>
+              <span class="text-sm">{{ job.created_at }}</span>
+            </span>
+          </td>
+
+          <!-- Actions -->
+          <td class="px-4 py-3 flex items-center gap-2 justify-center">
+            <!-- Tombol Delete -->
+            <button class="p-1.5 rounded hover:bg-red-100 text-red-600" hx-get="/partials/confirm-delete-modal"
+              hx-target="body" hx-swap="beforeend"
+              hx-vals='{"job_id": "{{ job.job_id }}", "project_name": "{{ job.project_name }}"}'
+              hx-on::before-request="window.stopAutoRefresh && window.stopAutoRefresh()">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+
+            <!-- Tombol Download (kalau selesai) -->
+            {% if job.status == 'completed' %}
+            <a href="{{ url_for('download_report', project_name=job.project_name) }}"
+              class="p-1.5 rounded hover:bg-Primary-100 transition" title="Download Report">
+              <i data-lucide="download" class="w-4 h-4 text-Primary-500"></i>
+            </a>
+            {% else %}
+            <button class="p-1.5 rounded bg-gray-100 cursor-not-allowed" disabled>
+              <i data-lucide="download" class="w-4 h-4 text-gray-400"></i>
+            </button>
+            {% endif %}
+
+            <!-- View PDF -->
+            {% if job.status == 'completed' %}
+            <a href="{{ url_for('view_report', project_name=job.project_name) }}" target="_blank"
+              class="p-1.5 rounded hover:bg-Primary-100 transition" title="View Report">
+              <i data-lucide="eye" class="w-4 h-4 text-Primary-500"></i>
+            </a>
+            {% else %}
+            <button class="p-1.5 rounded bg-gray-100 cursor-not-allowed" disabled>
+              <i data-lucide="eye" class="w-4 h-4 text-gray-400"></i>
+            </button>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  {% else %}
+  <div class="text-center py-12 bg-white rounded-lg border border-gray-100">
+    <i data-lucide="inbox" class="w-16 h-16 text-gray-300 mx-auto mb-4"></i>
+    <p class="text-gray-500 mb-4">No projects yet. Start your first pentest!</p>
+    <a href="{{ url_for('scan_vulnerability') }}"
+      class="inline-flex items-center gap-2 bg-Primary-500 text-white px-6 py-2 rounded-lg hover:bg-Primary-200 transition">
+      <i data-lucide="plus-circle" class="w-4 h-4"></i>
+      Create Project
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function projectsTable() {
+    return {
+      // ambil data dari backend
+      projects: JSON.parse(document.querySelector('[x-data="projectsTable()"]').getAttribute('data-jobs') || '[]'),
+      search: "",
+      currentPage: 1,
+      perPage: 5,
+      sortColumn: 'project_name',
+      sortDirection: 'asc',
+
+      showConfirm: false,
+      selectedJobId: null,
+      selectedJobName: '',
+
+      sort(column) {
+        if (this.sortColumn === column) {
+          this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+        } else {
+          this.sortColumn = column;
+          this.sortDirection = 'asc';
+        }
+      },
+
+      get filteredProjects() {
+        return this.projects.filter(p =>
+          p.project_name.toLowerCase().includes(this.search.toLowerCase())
+        );
+      },
+
+      get totalFilteredCount() {
+        return this.filteredProjects.length;
+      },
+
+      get totalPages() {
+        return Math.ceil(this.totalFilteredCount / this.perPage);
+      },
+
+      get sortedProjects() {
+        const sorted = [...this.filteredProjects];
+        sorted.sort((a, b) => {
+          let valA = a[this.sortColumn];
+          let valB = b[this.sortColumn];
+          if (typeof valA === "string") valA = valA.toLowerCase();
+          if (typeof valB === "string") valB = valB.toLowerCase();
+          if (valA < valB) return this.sortDirection === "asc" ? -1 : 1;
+          if (valA > valB) return this.sortDirection === "asc" ? 1 : -1;
+          return 0;
+        });
+        return sorted;
+      },
+
+      get visiblePages() {
+        const windowSize = 3;
+        const start = Math.max(1, this.currentPage - Math.floor(windowSize / 2));
+        const end = Math.min(this.totalPages, start + windowSize - 1);
+        const pages = [];
+        for (let i = start; i <= end; i++) pages.push(i);
+        return pages;
+      },
+
+      nextPage() { if (this.currentPage < this.totalPages) this.currentPage++; },
+      prevPage() { if (this.currentPage > 1) this.currentPage--; },
+      goToPage(page) { this.currentPage = page; },
+    };
+  }
+  document.addEventListener("htmx:afterSwap", () => lucide.createIcons());
+  document.addEventListener("DOMContentLoaded", () => lucide.createIcons());
+</script>

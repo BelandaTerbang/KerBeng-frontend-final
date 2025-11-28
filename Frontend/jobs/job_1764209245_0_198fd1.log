@@ -1,0 +1,55 @@
+ __  __       ____   ___  _       _____            _       _ _   
+|  \/  |_   _/ ___| / _ \| |     | ____|_  ___ __ | | ___ (_) |_ 
+| |\/| | | | \___ \| | | | |     |  _| \ \/ / '_ \| |/ _ \| | __|
+| |  | | |_| |___) | |_| | |___  | |___ >  <| |_) | | (_) | | |_ 
+|_|  |_|\__, |____/ \__\_\_____| |_____/_/\_\ .__/|_|\___/|_|\__|
+        |___/                               |_|                  
+
+Auto Pentester says I'm scanning target ['10.33.102.252'] from 172.28.93.252
+Auto Pentester says I'm enumerating network target
+
+hasilparse {'10.33.102.225': [{'port': '3306', 'protocol': 'tcp', 'state': 'open', 'service': 'mysql', 'info': {'service': 'mysql', 'version': 'MySQL 5.5.23'}}], 'mysql': []}
+
+10.33.102.225  3306 {'service': 'mysql', 'version': 'MySQL 5.5.23'}
+
+Auto Pentester says I'm analysing vulnerability network target
+Processing Check Vulnerability: 10.33.102.225 3306 MySQL 5.5.23
+Target [['10.33.102.225', '3306']] is seem to be vulnerable :)
+Auto Pentester says I'm exploiting network target
+
+Please wait... AutoPentest is attempting a password bypass.
+
+[!!!] VULNERABILITY DETECTED: Login succeeded without a valid password.
+[+] Target IP: 10.33.102.225
+[+] Password bypass: c7mtLwX6
+[+] Number of attempts: 218
+[+] MySQL Output:
+Database
+information_schema
+mysql
+performance_schema
+test
+
+data :
+ {'10.33.102.225': {'port': '3306', 'service': 'mysql', 'version': 'MySQL 5.5.23'}, 'vulnList': [['10.33.102.225', '3306']]}
+self-data-report {'10.33.102.225': {'port': '3306', 'service': 'mysql', 'version': 'MySQL 5.5.23'}, 'vulnList': [['10.33.102.225', '3306']]}
+dataDalam: {'IP': '10.33.102.225', 'Port': '3306', 'Service': 'mysql', 'Version': 'MySQL 5.5.23', 'Vulnerable': True}
+Traceback (most recent call last):
+  File "/home/jotaro/KerBeng/Kode/Kode 1.9/Client.py", line 28, in <module>
+    client_code(pentest_module, params)
+  File "/home/jotaro/KerBeng/Kode/Kode 1.9/Client.py", line 8, in client_code
+    autoPentest.startPentest(params)
+  File "/home/jotaro/KerBeng/Kode/Kode 1.9/AutoPentest/APentest.py", line 86, in startPentest
+    self.reporting(params)
+  File "/home/jotaro/KerBeng/Kode/Kode 1.9/CVE/CVE12_2122/CVE12_2122.py", line 78, in reporting
+    rep.generate_report()
+  File "/home/jotaro/KerBeng/Kode/Kode 1.9/Metode/Report.py", line 31, in generate_report
+    subprocess.run(["unoconv", "-f", "pdf", f"{self.outRepFile}Pentesting_Report.docx"], stderr=subprocess.DEVNULL)
+  File "/usr/lib/python3.12/subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/lib/python3.12/subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "/usr/lib/python3.12/subprocess.py", line 1955, in _execute_child
+    raise child_exception_type(errno_num, err_msg, err_filename)
+FileNotFoundError: [Errno 2] No such file or directory: 'unoconv'

@@ -1,0 +1,256 @@
+{% extends 'base.html' %}
+{% block title %}Select CVE - AutoPentest{% endblock %}
+
+{% block content %}
+<div x-data="selectCVE()" class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  
+  <!-- Header -->
+  <div class="mb-6">
+    <div class="flex items-center justify-between mb-2">
+      <div class="flex items-center gap-3">
+        <button @click="goBack" class="p-2 hover:bg-gray-100 rounded-lg transition">
+          <i data-lucide="arrow-left" class="w-5 h-5 text-gray-600"></i>
+        </button>
+        <i data-lucide="shield-check" class="w-7 h-7 text-Primary-500"></i>
+        <h1 class="text-2xl sm:text-3xl font-bold text-Primary-500">Select CVE Modules</h1>
+      </div>
+      <span class="text-sm text-gray-500">
+        <span x-text="projectInfo.project_name"></span>
+      </span>
+    </div>
+    <p class="text-gray-600 text-sm ml-14">
+      Select one or more CVE modules for each target or run all at once.
+    </p>
+  </div>
+
+  <!-- Scan Summary -->
+  <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+    <div class="flex items-start gap-3">
+      <i data-lucide="scan" class="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5"></i>
+      <div class="flex-1">
+        <h3 class="font-semibold text-blue-900 mb-1">Scan Completed</h3>
+        <p class="text-sm text-blue-800 mb-2">
+          <span x-text="targets.length"></span> target(s) scanned, 
+          <span x-text="availableCVEs.length"></span> CVE(s) available
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    
+    <!-- Left -->
+    <div class="lg:col-span-2 space-y-4">
+      <template x-for="(target, index) in targets" :key="index">
+        <div class="bg-white rounded-xl shadow-sm border-2 border-Primary-200 p-4 sm:p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <i data-lucide="target" class="w-5 h-5 text-Primary-500"></i>
+              <h2 class="text-lg font-semibold text-Primary-500">Target <span x-text="index + 1"></span></h2>
+            </div>
+            <span class="font-mono text-sm text-gray-600" x-text="target"></span>
+          </div>
+
+          <!-- CVE List -->
+          <div class="space-y-2">
+            <p class="text-sm text-gray-600 mb-2 font-medium">Select one or more CVEs:</p>
+            <template x-for="cve in availableCVEs" :key="cve.id">
+              <label class="flex items-start gap-2 p-2 rounded-lg border hover:bg-gray-50 cursor-pointer">
+                <input 
+                  type="checkbox"
+                  class="mt-1"
+                  :value="cve.id"
+                  @change="toggleCVE(index, cve.id)"
+                  :checked="selectedCVEs[index].includes(cve.id)"
+                />
+                <div>
+                  <span class="font-semibold text-sm text-gray-900" x-text="cve.id + ' - ' + cve.name"></span>
+                  <p class="text-xs text-gray-600" x-text="cve.description"></p>
+                  <div class="mt-1 flex items-center gap-2">
+                    <span class="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded" x-text="'Severity: ' + cve.severity"></span>
+                    <span class="text-xs bg-blue-100 text-blue-700 px-2 py-0.5 rounded" x-text="'CVSS: ' + cve.cvss"></span>
+                  </div>
+                </div>
+              </label>
+            </template>
+          </div>
+        </div>
+      </template>
+
+      <!-- Actions -->
+      <div class="flex flex-col sm:flex-row gap-3 pt-2">
+        <button 
+          @click="startPentest"
+          :disabled="submitting || !allTargetsHaveCVEs()"
+          class="flex-1 bg-Primary-500 text-white px-6 py-3 rounded-lg font-medium hover:bg-Primary-200 disabled:opacity-60 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all shadow-sm">
+          <i :data-lucide="submitting ? 'loader-2' : 'play'" :class="{'animate-spin': submitting}" class="w-4 h-4"></i>
+          <span x-text="submitting ? 'Starting...' : 'Start Pentest Selected CVEs'"></span>
+        </button>
+
+        <button 
+          @click="startPentestAll"
+          :disabled="submitting"
+          class="flex-1 bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-500 disabled:opacity-60 flex items-center justify-center gap-2 shadow-sm">
+          <i data-lucide="zap" class="w-4 h-4"></i>
+          <span>Pentest All CVEs</span>
+        </button>
+
+        <button 
+          @click="goBack"
+          :disabled="submitting"
+          type="button"
+          class="flex-none bg-white border border-gray-300 rounded-lg px-4 py-3 text-sm text-gray-700 hover:bg-gray-50 transition-all">
+          <i data-lucide="arrow-left" class="w-4 h-4 inline-block mr-1"></i>
+          Back
+        </button>
+      </div>
+
+      <!-- Status -->
+      <div 
+        x-show="statusMessage"
+        x-transition
+        :class="{
+          'bg-green-50 text-green-600 border-green-200': statusType === 'success',
+          'bg-red-50 text-red-600 border-red-200': statusType === 'error',
+          'bg-blue-50 text-blue-600 border-blue-200': statusType === 'info'
+        }"
+        class="flex items-center gap-3 px-4 py-3 rounded-lg border mt-4">
+        <i :data-lucide="statusType === 'success' ? 'check-circle' : statusType === 'error' ? 'x-circle' : 'info'" class="w-5 h-5 flex-shrink-0"></i>
+        <span class="text-sm font-medium" x-text="statusMessage"></span>
+      </div>
+    </div>
+
+    <!-- Right Panel -->
+    <div class="lg:col-span-1">
+      <div class="bg-green-50 border border-green-200 rounded-xl p-5 sticky top-6">
+        <h3 class="font-semibold text-green-900 mb-3 flex items-center gap-2">
+          <i data-lucide="check-circle" class="w-5 h-5 text-green-600"></i>
+          Available CVEs
+        </h3>
+        <ul class="space-y-2 text-sm text-green-800">
+          <template x-for="cve in availableCVEs" :key="cve.id">
+            <li class="flex items-center gap-2 p-2 bg-white rounded-lg">
+              <i data-lucide="shield-alert" class="w-4 h-4 text-green-600"></i>
+              <span class="font-medium" x-text="cve.id"></span>
+            </li>
+          </template>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+function selectCVE() {
+  return {
+    projectInfo: {},
+    targets: [],
+    selectedCVEs: [],
+
+    availableCVEs: [
+      { id: 'CVE12_2122', name: 'MySQL Auth Bypass', description: 'Authentication bypass vulnerability in MySQL', severity: 'High', cvss: '7.5' },
+      { id: 'CVE22_46169', name: 'Cacti RCE', description: 'Remote Code Execution in Cacti', severity: 'Critical', cvss: '9.8' }
+    ],
+
+    submitting: false,
+    statusMessage: '',
+    statusType: 'info',
+
+    init() {
+      const scanData = sessionStorage.getItem('scan_results');
+      if (!scanData) {
+        window.location.href = "{{ url_for('scan_vulnerability') }}";
+        return;
+      }
+      const data = JSON.parse(scanData);
+      this.projectInfo = data;
+      this.targets = data.targets || [];
+      this.selectedCVEs = this.targets.map(() => []);
+    },
+
+    toggleCVE(index, cveId) {
+      const list = this.selectedCVEs[index];
+      const pos = list.indexOf(cveId);
+      if (pos > -1) list.splice(pos, 1);
+      else list.push(cveId);
+    },
+
+    allTargetsHaveCVEs() {
+      return this.selectedCVEs.every(arr => arr.length > 0);
+    },
+
+    async startPentest() {
+      if (!this.allTargetsHaveCVEs()) {
+        this.showStatus('Select at least one CVE per target', 'error');
+        return;
+      }
+
+      const targetsData = this.targets.map((target, i) => ({
+        target_ip: target,
+        cve_modules: this.selectedCVEs[i]
+      }));
+
+      await this._runPentest(targetsData);
+    },
+
+    async startPentestAll() {
+      const targetsData = this.targets.map(target => ({
+        target_ip: target,
+        cve_modules: this.availableCVEs.map(c => c.id)
+      }));
+
+      await this._runPentest(targetsData);
+    },
+
+    async _runPentest(targetsData) {
+      this.submitting = true;
+      this.showStatus('Starting pentest...', 'info');
+
+      try {
+        const response = await fetch("{{ url_for('start_pentest_api') }}", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            project_name: this.projectInfo.project_name,
+            username: this.projectInfo.username,
+            description: this.projectInfo.description,
+            targets: targetsData.flatMap(t =>
+              t.cve_modules.map(cve => ({ target_ip: t.target_ip, cve_module: cve }))
+            )
+          })
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+          this.showStatus(data.message, 'success');
+          sessionStorage.removeItem('scan_results');
+          setTimeout(() => window.location.href = "{{ url_for('dashboard') }}", 2000);
+        } else {
+          this.showStatus(data.message || 'Failed to start pentest', 'error');
+        }
+      } catch (e) {
+        this.showStatus('Network error: ' + e.message, 'error');
+      } finally {
+        this.submitting = false;
+        setTimeout(() => lucide.createIcons(), 100);
+      }
+    },
+
+    goBack() {
+      window.location.href = "{{ url_for('scan_vulnerability') }}";
+    },
+
+    showStatus(msg, type) {
+      this.statusMessage = msg;
+      this.statusType = type;
+      setTimeout(() => lucide.createIcons(), 100);
+      if (type !== 'error') {
+        setTimeout(() => this.statusMessage = '', 5000);
+      }
+    }
+  }
+}
+</script>
+{% endblock %}
