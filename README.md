@@ -18,13 +18,6 @@ Framework ini menggabungkan:
   * Log tracking
   * Auto-refresh status
 
-Project ini sangat cocok untuk:
-
-✔ Pembelajaran Red Team / Pentest
-✔ Automasi scan → pilih CVE → exploit
-✔ Mengembangkan CVE module custom
-✔ Dashboard monitoring pentest
-
 ---
 
 # 1. Clone Repository
