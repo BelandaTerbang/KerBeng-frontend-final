@@ -1,0 +1,1 @@
+MySQL on MySQL 5.5.23 seems to be vulnerable

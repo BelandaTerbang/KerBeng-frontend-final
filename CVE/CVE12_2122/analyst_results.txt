@@ -1,0 +1,5 @@
+
+
+=========== Vulnerability scanning result of target 10.33.102.225 
+
+MySQL on MySQL 5.5.23 seems to be vulnerable

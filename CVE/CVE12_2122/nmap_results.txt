@@ -1,0 +1,30 @@
+# Nmap 7.94SVN scan initiated Thu Aug 28 08:54:17 2025 as: nmap -sV -sC -Pn -O -oN CVE/CVE12_2122/nmap_results.txt 10.33.102.225
+Nmap scan report for 10.33.102.225
+Host is up (0.00033s latency).
+Not shown: 998 closed tcp ports (reset)
+PORT     STATE SERVICE VERSION
+22/tcp   open  ssh     OpenSSH 8.2p1 Ubuntu 4ubuntu0.13 (Ubuntu Linux; protocol 2.0)
+| ssh-hostkey: 
+|   3072 98:1a:0f:fe:90:5e:02:57:4a:e5:25:8c:28:d8:46:f5 (RSA)
+|   256 57:d2:80:79:75:dd:58:d2:65:e7:a4:3c:d1:35:1f:c4 (ECDSA)
+|_  256 8e:11:44:47:1b:93:4f:3b:31:e4:45:95:01:2c:4b:ce (ED25519)
+3306/tcp open  mysql   MySQL 5.5.23
+| mysql-info: 
+|   Protocol: 10
+|   Version: 5.5.23
+|   Thread ID: 2
+|   Capabilities flags: 63487
+|   Some Capabilities: Support41Auth, FoundRows, LongColumnFlag, SupportsTransactions, Speaks41ProtocolOld, Speaks41ProtocolNew, DontAllowDatabaseTableColumn, SupportsLoadDataLocal, IgnoreSpaceBeforeParenthesis, LongPassword, InteractiveClient, ODBCClient, IgnoreSigpipes, SupportsCompression, ConnectWithDatabase, SupportsAuthPlugins, SupportsMultipleResults, SupportsMultipleStatments
+|   Status: Autocommit
+|   Salt: )!fc<BuIK|NS5OkN%hb2
+|_  Auth Plugin Name: mysql_native_password
+MAC Address: 00:50:56:97:49:B5 (VMware)
+Device type: general purpose
+Running: Linux 4.X|5.X
+OS CPE: cpe:/o:linux:linux_kernel:4 cpe:/o:linux:linux_kernel:5
+OS details: Linux 4.15 - 5.8
+Network Distance: 1 hop
+Service Info: OS: Linux; CPE: cpe:/o:linux:linux_kernel
+
+OS and Service detection performed. Please report any incorrect results at https://nmap.org/submit/ .
+# Nmap done at Thu Aug 28 08:54:20 2025 -- 1 IP address (1 host up) scanned in 3.00 seconds
