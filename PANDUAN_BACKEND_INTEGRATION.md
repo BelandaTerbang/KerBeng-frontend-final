@@ -1,37 +1,37 @@
-# 🔧 Panduan Integrasi Backend - AutoPentest
+#  Panduan Integrasi Backend - AutoPentest
 
-## 📋 Tujuan Dokumen
+##  Tujuan Dokumen
 
 Dokumen ini menjelaskan **secara detail** apa yang harus dilakukan oleh **Tim Backend** untuk mengintegrasikan sistem vulnerability scanning dan penetration testing dengan frontend AutoPentest yang sudah ada.
 
 ---
 
-## 🎯 Overview Integrasi
+##  Overview Integrasi
 
 ### Apa yang Sudah Ada (Frontend)
 
-✅ **UI/UX Lengkap**
+ **UI/UX Lengkap**
 - Form scan vulnerability
 - Halaman pemilihan CVE
 - Dashboard monitoring
 - Real-time progress tracking
 - Report viewer
 
-✅ **API Endpoints (Dummy)**
+ **API Endpoints (Dummy)**
 - `/api/scan-vulnerability` - Return dummy CVE data
 - `/api/start-pentest` - Terima job, masukkan ke queue
 - Job queue system dengan sequential execution
 
 ### Apa yang Perlu Dibuat (Backend)
 
-❌ **Vulnerability Scanner Integration**  
-❌ **CVE Database/Detection System**  
-❌ **Client.py Execution & Monitoring**  
-❌ **Report Generation System**  
+ **Vulnerability Scanner Integration**  
+ **CVE Database/Detection System**  
+ **Client.py Execution & Monitoring**  
+ **Report Generation System**  
 
 ---
 
-## 🔌 Integration Points
+##  Integration Points
 
 Ada **3 Integration Points** utama yang harus dikerjakan:
 
@@ -44,7 +44,7 @@ graph TD
 
 ---
 
-## 📍 Integration Point 1: Vulnerability Scanner
+##  Integration Point 1: Vulnerability Scanner
 
 ### Lokasi Kode
 
@@ -60,7 +60,7 @@ def api_scan_vulnerability():
     data = request.get_json()
     targets = data.get('targets', [])
 
-    # ⚠️ DUMMY DATA - PERLU DIGANTI
+    #  DUMMY DATA - PERLU DIGANTI
     dummy_results = [
         {
             "id": "CVE12_2122",
@@ -79,7 +79,7 @@ def api_scan_vulnerability():
     })
 ```
 
-### ✅ Yang Harus Dilakukan Backend
+###  Yang Harus Dilakukan Backend
 
 #### 1.1 Implementasi Vulnerability Scanner
 
@@ -173,7 +173,7 @@ def api_scan_vulnerability():
         return jsonify({"status": "error", "message": "No targets provided"}), 400
 
     try:
-        # ✅ IMPLEMENTASI BARU
+        #  IMPLEMENTASI BARU
         scanner = VulnerabilityScanner()
         all_results = []
 
@@ -266,7 +266,7 @@ def api_scan_vulnerability():
 
 ---
 
-## 📍 Integration Point 2: CVE Detection & Mapping
+##  Integration Point 2: CVE Detection & Mapping
 
 ### Lokasi Kode
 
@@ -285,7 +285,7 @@ availableCVEs: [
 > [!WARNING]
 > Daftar CVE ini **hardcoded** di frontend dan harus diganti menjadi **dinamis** dari backend agar setiap CVE module baru langsung tersedia tanpa ubah kode frontend.
 
-### ✅ Yang Harus Dilakukan Backend
+###  Yang Harus Dilakukan Backend
 
 #### 2.1 Buat CVE Database/Registry
 
@@ -458,7 +458,7 @@ async init() {
 
 ---
 
-## 📍 Integration Point 3: Pentest Execution & Report
+##  Integration Point 3: Pentest Execution & Report
 
 ### Lokasi Kode
 
@@ -483,7 +483,7 @@ def job_worker():
             update_job_status(job_id, 'completed', ...)
 ```
 
-### ✅ Yang Harus Dilakukan Backend
+###  Yang Harus Dilakukan Backend
 
 #### 3.1 Pastikan Client.py Kompatibel
 
@@ -498,19 +498,19 @@ import sys
 def main():
     parser = argparse.ArgumentParser(description='AutoPentest Client')
 
-    # ✅ WAJIB: argparse dengan nama argumen ini
+    #  WAJIB: argparse dengan nama argumen ini
     parser.add_argument('--ip', required=True, help='Target IP address')
     parser.add_argument('--cve', required=True, help='CVE module to execute')
 
     args = parser.parse_args()
     result = execute_pentest(args.ip, args.cve)
 
-    # ✅ WAJIB: exit code 0 = sukses, non-zero = gagal
+    #  WAJIB: exit code 0 = sukses, non-zero = gagal
     sys.exit(0 if result and result.get('success') else 1)
 
 
 def execute_pentest(target_ip, cve_module):
-    # ✅ WAJIB: Print progress agar bisa dimonitor
+    #  WAJIB: Print progress agar bisa dimonitor
     print(f"[*] Starting pentest: {cve_module}")
     print(f"[*] Target: {target_ip}")
 
@@ -547,7 +547,7 @@ if __name__ == '__main__':
 ```python
 # CVE/CVE12_2122.py
 
-# ✅ WAJIB: METADATA untuk auto-detection
+#  WAJIB: METADATA untuk auto-detection
 METADATA = {
     "name": "MySQL Auth Bypass",
     "description": "Authentication bypass vulnerability in MySQL 5.1/5.5",
@@ -592,7 +592,7 @@ class Exploit:
             return {"success": False}
 
 
-# ✅ WAJIB: Entry point ini dipanggil oleh Client.py
+#  WAJIB: Entry point ini dipanggil oleh Client.py
 def run(target_ip):
     exploit = Exploit(target_ip)
     return exploit.run()
@@ -675,7 +675,7 @@ if return_code == 0:
 
 ---
 
-## 🗂️ Struktur Folder Backend yang Direkomendasikan
+##  Struktur Folder Backend yang Direkomendasikan
 
 ```
 Backend/  (atau letakkan di root project)
@@ -703,7 +703,7 @@ Backend/  (atau letakkan di root project)
 
 ---
 
-## 📌 Lokasi Penempatan File di Project Ini
+##  Lokasi Penempatan File di Project Ini
 
 > [!IMPORTANT]
 > Project ini **hanya memiliki satu folder**: `Frontend/`. Semua file backend **harus ditempatkan di dalam `Frontend/`** agar bisa diimport langsung oleh `app.py` yang sudah ada.
@@ -773,7 +773,7 @@ from report_generator import PentestReportGenerator
 
 ```python
 candidates = [
-    "./Client.py",          # ← Frontend/Client.py  ✅ Taruh di sini
+    "./Client.py",          # ← Frontend/Client.py   Taruh di sini
     "./Pentest/Client.py",
     "./pentest/Client.py",
 ]
@@ -820,7 +820,7 @@ python-dotenv==1.0.0
 
 ---
 
-## 📦 Dependencies Backend
+##  Dependencies Backend
 
 ```txt
 # requirements_backend.txt
@@ -848,7 +848,7 @@ pip install python-nmap requests reportlab python-docx python-dotenv pyyaml
 
 ---
 
-## 🔄 Roadmap Implementasi
+##  Roadmap Implementasi
 
 ### Phase 1 — Vulnerability Scanner (Week 1)
 
@@ -885,7 +885,7 @@ pip install python-nmap requests reportlab python-docx python-dotenv pyyaml
 
 ---
 
-## 🧪 Testing Checklist
+##  Testing Checklist
 
 ### Unit Tests
 
@@ -946,7 +946,7 @@ def test_full_workflow():
 
 ---
 
-## 🚨 Error Handling
+##  Error Handling
 
 ### Scanner Errors
 
@@ -983,7 +983,7 @@ except Exception as e:
 
 ---
 
-## 📊 Monitoring & Logging
+##  Monitoring & Logging
 
 ```python
 import logging
@@ -1007,7 +1007,7 @@ logger.error(f"Scan failed: {error}")
 
 ---
 
-## 🔐 Security Considerations
+##  Security Considerations
 
 ### Input Validation (Wajib Diimplementasikan)
 
@@ -1056,48 +1056,3 @@ def execute_in_sandbox(cve_module, target_ip):
     container.remove()
     return logs
 ```
-
----
-
-## ✅ Deliverables Checklist
-
-### Week 1 — Vulnerability Scanner
-- [ ] `VulnerabilityScanner` class diimplementasikan
-- [ ] `/api/scan-vulnerability` return hasil scan nyata (bukan dummy)
-- [ ] Unit tests lulus
-- [ ] Dokumentasi diupdate
-
-### Week 2 — CVE Database
-- [ ] `cve_registry.py` dibuat dengan semua CVE tersedia
-- [ ] Service-to-CVE matching berfungsi
-- [ ] Daftar CVE di frontend sudah dinamis
-- [ ] Integration tests lulus
-
-### Week 3 — Pentest Execution
-- [ ] `Client.py` sudah support `--ip` dan `--cve`
-- [ ] Semua CVE modules punya `METADATA` dan fungsi `run(target_ip)`
-- [ ] Sequential execution berjalan tanpa error
-- [ ] Log streaming terverifikasi
-
-### Week 4 — Report Generation
-- [ ] `PentestReportGenerator` diimplementasikan
-- [ ] PDF report auto-generate setelah job selesai
-- [ ] Fitur download & view PDF berfungsi di dashboard
-- [ ] End-to-end testing selesai
-
----
-
-## 🎯 Success Criteria
-
-| Komponen | Target |
-|----------|--------|
-| **Vulnerability Scanner** | Scan < 60 detik, 95% akurasi service detection |
-| **CVE Matching** | 90% akurasi, support minimal 10 CVE modules |
-| **Pentest Execution** | Sequential tanpa race condition, log real-time |
-| **Report Generation** | PDF dihasilkan < 5 detik, format profesional |
-
----
-
-**Last Updated**: 2026-02-25  
-**Version**: 1.0  
-**Contact**: Backend Integration Team
