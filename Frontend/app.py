@@ -222,7 +222,7 @@ def api_scan_vulnerability():
     }
 
     TODO Backend Team:
-    1. Terima data targets dari request
+    1. Terima data targets dari request pada baris 192-198
     2. Jalankan vulnerability scanner (nmap, nikto, dll)
     3. Parse hasil scan
     4. Return daftar CVE yang terdeteksi dalam format di atas
